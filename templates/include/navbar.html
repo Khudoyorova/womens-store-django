@@ -1,0 +1,238 @@
+<nav class="navbar navbar-expand-lg bg-white shadow-sm py-3">
+    <div class="container">
+
+        <!-- Логотип -->
+        <a class="navbar-brand fw-bold fs-3 me-4"
+           href="{% url 'home' %}">
+            Women's Store
+        </a>
+
+        <!-- Кнопка мобильного меню -->
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav"
+                aria-controls="navbarNav"
+                aria-expanded="false"
+                aria-label="Открыть меню">
+
+            <span class="navbar-toggler-icon"></span>
+
+        </button>
+
+        <!-- Меню -->
+        <div class="collapse navbar-collapse"
+             id="navbarNav">
+
+            <ul class="navbar-nav align-items-lg-center gap-lg-1">
+
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href="{% url 'home' %}">
+                        Главная
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href="{% url 'home' %}#products">
+                        Каталог
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href="{% url 'home' %}#products">
+                        Новинки
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href="{% url 'home' %}#products">
+                        Акции
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link"
+                       href="#footer">
+                        Контакты
+                    </a>
+                </li>
+
+            </ul>
+
+            <!-- Правая часть -->
+            <div class="d-flex align-items-center ms-lg-auto gap-2 flex-nowrap">
+
+                <!-- Поиск -->
+                <form method="get"
+                      action="{% url 'product_search' %}"
+                      class="d-flex my-3 my-lg-0"
+                      style="width:260px;">
+
+                    <div class="input-group">
+
+                        <input
+                            type="search"
+                            name="q"
+                            value="{{ request.GET.q }}"
+                            class="form-control"
+                            placeholder="Найти товар..."
+                            required>
+
+                        <button
+                            type="submit"
+                            class="btn btn-dark">
+
+                            <i class="bi bi-search"></i>
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+                {% if user.is_authenticated %}
+
+                    <!-- Избранное -->
+                    <a href="{% url 'favorite_list' %}"
+                       class="btn btn-outline-dark position-relative"
+                       title="Избранное">
+
+                        <i class="bi bi-heart-fill text-danger"></i>
+
+                    </a>
+
+                    <!-- Корзина -->
+                    <a href="{% url 'cart:cart_detail' %}"
+                       class="btn btn-outline-dark position-relative"
+                       title="Корзина">
+
+                        <i class="bi bi-cart3"></i>
+
+                    </a>
+
+                    <!-- Пользователь -->
+                    <div class="dropdown">
+
+                        <button
+                            class="btn btn-outline-dark dropdown-toggle"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
+
+                            <i class="bi bi-person-circle me-1"></i>
+                            {{ user.username }}
+
+                        </button>
+
+                        <ul class="dropdown-menu dropdown-menu-end shadow">
+
+                            <li>
+
+                                <a class="dropdown-item"
+                                   href="{% url 'orders:my_orders' %}">
+
+                                    <i class="bi bi-box-seam me-2"></i>
+                                    Мои заказы
+
+                                </a>
+
+                            </li>
+
+                            <li>
+
+                                <a class="dropdown-item"
+                                   href="{% url 'favorite_list' %}">
+
+                                    <i class="bi bi-heart me-2 text-danger"></i>
+                                    Избранное
+
+                                </a>
+
+                            </li>
+
+                            <li>
+
+                                <a class="dropdown-item"
+                                   href="{% url 'cart:cart_detail' %}">
+
+                                    <i class="bi bi-cart3 me-2"></i>
+                                    Корзина
+
+                                </a>
+
+                            </li>
+
+                            <li><hr class="dropdown-divider"></li>
+
+                            <li>
+
+                                <form
+                                    action="{% url 'users:logout' %}"
+                                    method="post"
+                                    class="m-0">
+
+                                    {% csrf_token %}
+
+                                    <button
+                                        type="submit"
+                                        class="dropdown-item">
+
+                                        <i class="bi bi-box-arrow-right me-2"></i>
+                                        Выйти
+
+                                    </button>
+
+                                </form>
+
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+                {% else %}
+
+                    <!-- Избранное -->
+                    <a href="{% url 'users:login' %}"
+                       class="btn btn-outline-dark">
+
+                        <i class="bi bi-heart"></i>
+
+                    </a>
+
+                    <!-- Корзина -->
+                    <a href="{% url 'users:login' %}"
+                       class="btn btn-outline-dark">
+
+                        <i class="bi bi-cart3"></i>
+
+                    </a>
+
+                    <a href="{% url 'users:login' %}"
+                       class="btn btn-dark">
+
+                        <i class="bi bi-box-arrow-in-right me-1"></i>
+                        Войти
+
+                    </a>
+
+                    <a href="{% url 'users:register' %}"
+                       class="btn btn-outline-dark">
+
+                        Регистрация
+
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</nav>

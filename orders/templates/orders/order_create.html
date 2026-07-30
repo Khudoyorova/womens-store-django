@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Оформление заказа
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <h2 class="fw-bold mb-4">
+        Оформление заказа
+    </h2>
+
+    <div class="row">
+
+        <div class="col-lg-7">
+
+            <form method="post">
+
+                {% csrf_token %}
+
+                {{ form.as_p }}
+
+                <button class="btn btn-dark btn-lg mt-3">
+                    Оформить заказ
+                </button>
+
+            </form>
+
+        </div>
+
+        <div class="col-lg-5">
+
+            <div class="card shadow-sm">
+
+                <div class="card-body">
+
+                    <h4>Ваш заказ</h4>
+
+                    <hr>
+
+                    {% for item in cart.items.all %}
+
+                        <p>
+                            {{ item.product.name }}
+                            × {{ item.quantity }}
+                        </p>
+
+                    {% endfor %}
+
+                    <hr>
+
+                    <h5>
+                        Итого:
+                        {{ cart.total_price }} сум
+                    </h5>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Заказ оформлен
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5 text-center">
+
+    <i class="bi bi-check-circle-fill
+              text-success"
+       style="font-size:80px;"></i>
+
+    <h2 class="mt-4">
+        Спасибо за заказ!
+    </h2>
+
+    <p class="lead">
+        Ваш заказ №{{ order_id }}
+        успешно оформлен.
+    </p>
+
+    <a href="{% url 'home' %}"
+       class="btn btn-dark">
+
+        Вернуться в магазин
+
+    </a>
+
+</div>
+
+{% endblock %}
