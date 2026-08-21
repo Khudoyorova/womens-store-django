@@ -23,3 +23,6 @@ media/
 
 # macOS
 .DS_Store
+
+# Collected static files
+staticfiles/
