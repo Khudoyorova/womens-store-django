@@ -533,27 +533,5 @@
     "created_at": "2026-08-09T12:44:12.562Z",
     "updated_at": "2026-08-09T15:14:42.940Z"
   }
-},
-{
-  "model": "products.review",
-  "pk": 1,
-  "fields": {
-    "product": 5,
-    "user": 2,
-    "rating": 4,
-    "text": "очен красивая",
-    "created_at": "2026-07-24T12:27:41.079Z"
-  }
-},
-{
-  "model": "products.review",
-  "pk": 2,
-  "fields": {
-    "product": 24,
-    "user": 2,
-    "rating": 5,
-    "text": "рапрапрапрп",
-    "created_at": "2026-07-30T11:00:01.743Z"
-  }
 }
 ]
