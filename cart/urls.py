@@ -36,4 +36,22 @@ urlpatterns = [
         views.cart_clear,
         name='cart_clear'
     ),
+
+    path(
+        'api/',
+        views.CartAPIView.as_view(),
+        name='api_cart'
+    ),
+
+    path(
+        'api/items/add/',
+        views.CartItemAddAPIView.as_view(),
+        name='api_cart_item_add'
+    ),
+
+    path(
+        'api/items/<int:item_id>/',
+        views.CartItemDetailAPIView.as_view(),
+        name='api_cart_item_detail'
+    ),
 ]

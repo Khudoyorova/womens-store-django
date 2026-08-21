@@ -1,8 +1,13 @@
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+
 from .forms import ReviewForm
 from .models import Category, Product
+from .serializers import ProductSerializer, CategorySerializer
+
+from .permissions import IsAdminOrReadOnly
 
 
 def home(request):
@@ -133,3 +138,36 @@ def product_search(request):
         'products/search_results.html',
         context
     )
+
+
+class ProductListAPIView(ListCreateAPIView):
+    queryset = Product.objects.filter(
+        is_active=True
+    ).select_related('category')
+
+    serializer_class = ProductSerializer
+    permission_classes = [IsAdminOrReadOnly]
+
+class ProductDetailAPIView(RetrieveUpdateDestroyAPIView):
+    queryset = Product.objects.filter(
+        is_active=True
+    ).select_related('category')
+
+    serializer_class = ProductSerializer
+    permission_classes = [IsAdminOrReadOnly]
+
+class CategoryListAPIView(ListCreateAPIView):
+    queryset = Category.objects.filter(
+        is_active=True
+    )
+
+    serializer_class = CategorySerializer
+    permission_classes = [IsAdminOrReadOnly]
+
+class CategoryDetailAPIView(RetrieveUpdateDestroyAPIView):
+    queryset = Category.objects.filter(
+        is_active=True
+    )
+
+    serializer_class = CategorySerializer
+    permission_classes = [IsAdminOrReadOnly]

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Оплата успешна
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5 text-center">
+
+    <i class="bi bi-check-circle-fill text-success"
+       style="font-size: 80px;"></i>
+
+    <h2 class="mt-4">
+        Оплата прошла успешно!
+    </h2>
+
+    <p class="lead">
+        Заказ №{{ order.id }} оплачен.
+    </p>
+
+    <p>
+        Способ оплаты:
+        <strong>
+            {{ order.get_payment_method_display }}
+        </strong>
+    </p>
+
+    <p>
+        Сумма:
+        <strong>
+            {{ order.get_total_price }} сум
+        </strong>
+    </p>
+
+    <div class="mt-4">
+
+        <a href="{% url 'orders:order_detail' order.id %}"
+           class="btn btn-dark">
+            Посмотреть заказ
+        </a>
+
+        <a href="{% url 'home' %}"
+           class="btn btn-outline-dark ms-2">
+            Вернуться в магазин
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

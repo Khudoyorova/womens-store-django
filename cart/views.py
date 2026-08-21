@@ -3,9 +3,15 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from products.models import Product
 
 from .models import Cart, CartItem
+from .serializers import CartItemSerializer, CartSerializer
 
 
 @login_required
@@ -181,3 +187,165 @@ def cart_clear(request):
     )
 
     return redirect('cart:cart_detail')
+
+
+class CartAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        cart, created = Cart.objects.get_or_create(
+            user=request.user
+        )
+
+        serializer = CartSerializer(cart)
+
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK
+        )
+
+
+class CartItemAddAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        product_id = request.data.get('product')
+        quantity = request.data.get('quantity', 1)
+
+        product = get_object_or_404(
+            Product,
+            id=product_id,
+            is_active=True
+        )
+
+        try:
+            quantity = int(quantity)
+        except (TypeError, ValueError):
+            return Response(
+                {
+                    'detail': 'Количество должно быть числом.'
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if quantity < 1:
+            return Response(
+                {
+                    'detail': 'Количество должно быть больше 0.'
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if product.stock <= 0:
+            return Response(
+                {
+                    'detail': 'Товара нет в наличии.'
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        cart, created = Cart.objects.get_or_create(
+            user=request.user
+        )
+
+        cart_item, item_created = CartItem.objects.get_or_create(
+            cart=cart,
+            product=product,
+            defaults={
+                'quantity': 0
+            }
+        )
+
+        new_quantity = cart_item.quantity + quantity
+
+        if new_quantity > product.stock:
+            new_quantity = product.stock
+
+        cart_item.quantity = new_quantity
+        cart_item.save()
+
+        serializer = CartItemSerializer(cart_item)
+
+        if item_created:
+            response_status = status.HTTP_201_CREATED
+        else:
+            response_status = status.HTTP_200_OK
+
+        return Response(
+            serializer.data,
+            status=response_status
+        )
+
+
+class CartItemDetailAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request, item_id):
+        cart = get_object_or_404(
+            Cart,
+            user=request.user
+        )
+
+        cart_item = get_object_or_404(
+            CartItem,
+            id=item_id,
+            cart=cart
+        )
+
+        quantity = request.data.get('quantity')
+
+        if quantity is None:
+            return Response(
+                {
+                    'detail': 'Укажите quantity.'
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            quantity = int(quantity)
+        except (TypeError, ValueError):
+            return Response(
+                {
+                    'detail': 'Количество должно быть числом.'
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if quantity <= 0:
+            cart_item.delete()
+
+            return Response(
+                status=status.HTTP_204_NO_CONTENT
+            )
+
+        if quantity > cart_item.product.stock:
+            quantity = cart_item.product.stock
+
+        cart_item.quantity = quantity
+        cart_item.save()
+
+        serializer = CartItemSerializer(cart_item)
+
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK
+        )
+
+    def delete(self, request, item_id):
+        cart = get_object_or_404(
+            Cart,
+            user=request.user
+        )
+
+        cart_item = get_object_or_404(
+            CartItem,
+            id=item_id,
+            cart=cart
+        )
+
+        cart_item.delete()
+
+        return Response(
+            status=status.HTTP_204_NO_CONTENT
+        )

@@ -3,17 +3,55 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path(
+        'admin/',
+        admin.site.urls
+    ),
 
-    path('', include('products.urls')),
+    path(
+        '',
+        include('products.urls')
+    ),
 
-    path('users/', include('users.urls')),
+    path(
+        'users/',
+        include('users.urls')
+    ),
 
-    path('cart/', include('cart.urls')),
-    path('favorites/', include('favorites.urls')),
-    path('orders/', include('orders.urls')),
+    path(
+        'cart/',
+        include('cart.urls')
+    ),
+
+    path(
+        'favorites/',
+        include('favorites.urls')
+    ),
+
+    path(
+        'orders/',
+        include('orders.urls')
+    ),
+
+    # JWT
+    path(
+        'api/token/',
+        TokenObtainPairView.as_view(),
+        name='token_obtain_pair'
+    ),
+
+    path(
+        'api/token/refresh/',
+        TokenRefreshView.as_view(),
+        name='token_refresh'
+    ),
 ]
 
 

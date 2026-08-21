@@ -12,6 +12,7 @@ class OrderCreateForm(forms.ModelForm):
             'first_name',
             'phone',
             'address',
+            'payment_method',
         ]
 
         widgets = {
@@ -36,10 +37,17 @@ class OrderCreateForm(forms.ModelForm):
                     'placeholder': 'Введите адрес доставки',
                 }
             ),
+
+            'payment_method': forms.Select(
+                attrs={
+                    'class': 'form-select',
+                }
+            ),
         }
 
         labels = {
             'first_name': 'Имя',
             'phone': 'Телефон',
             'address': 'Адрес доставки',
+            'payment_method': 'Способ оплаты',
         }

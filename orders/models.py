@@ -13,6 +13,13 @@ class Order(models.Model):
         ('cancelled', 'Отменён'),
     ]
 
+    PAYMENT_METHOD_CHOICES = [
+        ('cash', 'Наличными при получении'),
+        ('card', 'Банковская карта'),
+        ('click', 'Click'),
+        ('payme', 'Payme'),
+    ]
+
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -39,6 +46,18 @@ class Order(models.Model):
         choices=STATUS_CHOICES,
         default='new',
         verbose_name='Статус'
+    )
+
+    payment_method = models.CharField(
+        max_length=20,
+        choices=PAYMENT_METHOD_CHOICES,
+        default='cash',
+        verbose_name='Способ оплаты'
+    )
+
+    is_paid = models.BooleanField(
+        default=False,
+        verbose_name='Оплачено'
     )
 
     created_at = models.DateTimeField(
