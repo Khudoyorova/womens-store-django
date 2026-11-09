@@ -179,9 +179,15 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
+# Если указан бакет Supabase — храним картинки там, иначе локально в media/
+if os.getenv('AWS_STORAGE_BUCKET_NAME'):
+    DEFAULT_STORAGE_BACKEND = 'storages.backends.s3.S3Storage'
+else:
+    DEFAULT_STORAGE_BACKEND = 'django.core.files.storage.FileSystemStorage'
+
 STORAGES = {
     'default': {
-        'BACKEND': 'storages.backends.s3.S3Storage',
+        'BACKEND': DEFAULT_STORAGE_BACKEND,
     },
     'staticfiles': {
         'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
