@@ -204,6 +204,22 @@ AWS_QUERYSTRING_AUTH = False
 AWS_DEFAULT_ACL = None
 AWS_S3_ADDRESSING_STYLE = 'path'
 AWS_S3_SIGNATURE_VERSION = 's3v4'
+
+
+# Публичные ссылки на картинки Supabase.
+# S3-адрес (/storage/v1/s3) требует подписи, а браузеру нужен публичный адрес:
+# https://<project>.supabase.co/storage/v1/object/public/<bucket>/<файл>
+if AWS_S3_ENDPOINT_URL and AWS_STORAGE_BUCKET_NAME:
+    AWS_S3_CUSTOM_DOMAIN = (
+        AWS_S3_ENDPOINT_URL
+        .replace('https://', '')
+        .replace('.storage.supabase.co', '.supabase.co')
+        .rstrip('/')
+        .replace(
+            '/storage/v1/s3',
+            f'/storage/v1/object/public/{AWS_STORAGE_BUCKET_NAME}'
+        )
+    )
 # =========================================================
 # MEDIA
 # =========================================================
