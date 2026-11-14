@@ -159,3 +159,9 @@ section h2.fw-bold {
         height: 280px;
     }
 }
+
+/* ===== Страница товара ===== */
+
+.display-5 {
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+}
